@@ -64,7 +64,7 @@ export default function HomePage() {
           <div
             className="absolute h-[3px] w-full rounded bg-[#d6c772]"
             style={{
-              transform: "rotate(45deg)",
+              transform: "rotate(130deg)",
               top: "50%",
               left: "0",
             }}
