@@ -3,9 +3,8 @@ import Swal from "sweetalert2";
 import {Tillana} from "next/font/google";
 import {MinusIcon, PlusIcon} from "lucide-react";
 
-import {useCounter} from "./hooks/useCounter";
-import {useSquareCounter} from "./hooks/useSquareCounter";
-
+import {useCounter} from "@/hooks/useCounter";
+import {useSquareCounter} from "@/hooks/useSquareCounter";
 import {Button} from "@/components/ui/button";
 import {cn} from "@/lib/utils";
 
