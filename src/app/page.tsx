@@ -1,13 +1,80 @@
 "use client";
 import {useState} from "react";
 import Swal from "sweetalert2";
+import {Tillana} from "next/font/google";
 
 import {Button} from "@/components/ui/button";
 import {Label} from "@/components/ui/label";
+import {cn} from "@/lib/utils";
+
+export const tillana = Tillana({
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700", "800"],
+});
 
 export default function HomePage() {
   const [puntosEllos, setPuntosEllos] = useState(0);
   const [puntosNos, setPuntosNos] = useState(0);
+
+  const puntosPorCubo = 5; // Cada cubo puede tener hasta 5 puntos
+
+  const renderCuadrado = (puntos: number) => {
+    const cubos = [];
+    const numCubos = Math.ceil(puntos / puntosPorCubo); // Número de cubos necesarios
+
+    for (let i = 0; i < numCubos; i++) {
+      const puntosEnCubo = Math.min(puntos - i * puntosPorCubo, puntosPorCubo); // Puntos en este cubo
+
+      cubos.push(
+        <div
+          key={i}
+          className={`${i === 2 ? "m-2 mb-5" : "m-2"} relative  h-12 w-12 border-[#26619C] lg:h-16 lg:w-16`}
+        >
+          {renderLineas(puntosEnCubo)}
+        </div>,
+      );
+    }
+
+    return cubos;
+  };
+
+  const renderLineas = (puntosEnCubo: number) => {
+    const lados = [];
+
+    if (puntosEnCubo >= 1) {
+      lados.push(<div key="top" className="absolute left-0 top-0 h-[3px] w-full bg-[#d6c772]" />);
+    }
+    if (puntosEnCubo >= 2) {
+      lados.push(
+        <div key="right" className="absolute right-0 top-0 h-full w-[3px] bg-[#d6c772]" />,
+      );
+    }
+    if (puntosEnCubo >= 3) {
+      lados.push(
+        <div key="bottom" className="absolute bottom-0 left-0 h-[3px] w-full bg-[#d6c772]" />,
+      );
+    }
+    if (puntosEnCubo >= 4) {
+      lados.push(<div key="left" className="absolute left-0 top-0 h-full w-[3px] bg-[#d6c772]" />);
+    }
+    if (puntosEnCubo === 5) {
+      lados.push(
+        <div key="diagonal" className="absolute left-0 top-0 h-full w-full">
+          <div
+            className="absolute h-[3px] w-full rounded bg-[#d6c772]"
+            style={{
+              transform: "rotate(45deg)",
+              top: "50%",
+              left: "0",
+            }}
+          />
+        </div>,
+      );
+    }
+
+    return lados;
+  };
 
   const handleSumar = (equipo: string) => {
     if (equipo === "ellos") {
@@ -47,82 +114,69 @@ export default function HomePage() {
     });
   };
 
-  {
-    /* FALTA LÓGICA GRÁFICA (ANOTACIÓN EN CUADRADOS) */
-  }
-
   return (
-    <section className="relative m-auto mt-4 flex h-[700px] w-[580px] flex-col justify-between rounded-[60px] border-[3px] border-solid border-[#acb9c5] bg-[#efefef]">
-      <div className="mt-6 flex justify-evenly">
-        <section className="flex flex-col items-center">
-          <Label className="relative text-3xl text-zinc-800" htmlFor="ellos">
-            Ellos
-          </Label>
-        </section>
-        <section className="flex flex-col items-center">
-          <Label className=" relative text-3xl text-zinc-800" htmlFor="nosotros">
-            Nosotros
-          </Label>
-        </section>
-      </div>
-      <div className="mb-8 flex items-center justify-evenly">
-        <Button
-          className="rounded-full bg-[#994040] text-[#f0db66]"
-          id="restarEllos"
-          onClick={() => handleRestar("ellos")}
+    <section className=" m-auto mt-4 flex h-[700px] w-[550px] items-center justify-center gap-16 rounded-[60px] bg-[#efefef]">
+      <div className="flex w-auto flex-col items-center">
+        <Label
+          className={cn("relative text-3xl font-normal text-zinc-800", tillana.className)}
+          htmlFor="ellos"
         >
-          -
-        </Button>
-        <Label className="text-lg text-zinc-800" htmlFor="puntosEllos">
-          {puntosEllos}
+          Ellos
         </Label>
-        <Button
-          className="rounded-full bg-[#446e41] text-[#f0db66]"
-          id="sumarEllos"
-          onClick={() => handleSumar("ellos")}
-        >
-          +
-        </Button>
-        <Button
-          className="rounded-full bg-[#994040] text-[#f0db66]"
-          id="restarNos"
-          onClick={() => handleRestar("nos")}
-        >
-          -
-        </Button>
-        <Label className="text-lg text-zinc-800" htmlFor="puntosNos">
-          {puntosNos}
-        </Label>
-        <Button
-          className="rounded-full bg-[#446e41] text-[#f0db66]"
-          id="sumarNos"
-          onClick={() => handleSumar("nos")}
-        >
-          +
-        </Button>
+        <div className="flex h-[500px] w-[150px] flex-col items-center">
+          {renderCuadrado(puntosEllos)}
+        </div>
+        <div className=" mt-8 flex items-center space-x-8">
+          <Button
+            className="rounded-full bg-[#994040] text-[#f0db66] hover:bg-[#7c3434]"
+            id="restarEllos"
+            onClick={() => handleRestar("ellos")}
+          >
+            -
+          </Button>
+          <Label className={cn("text-lg text-zinc-800", tillana.className)} htmlFor="puntosEllos">
+            {puntosEllos}
+          </Label>
+          <Button
+            className="rounded-full bg-[#446e41] text-[#f0db66] hover:bg-[#385c36]"
+            id="sumarEllos"
+            onClick={() => handleSumar("ellos")}
+          >
+            +
+          </Button>
+        </div>
       </div>
-
-      {/* DUDOSO, BUSCAR LA MANERA DE CREAR DOS COLUMNAS ELLOS/NOSOTROS CON UN GAP Y LAS LINEAS SEPARADORAS */}
-      <style jsx>{`
-        .relative::before {
-          content: "";
-          position: absolute;
-          top: 1.5rem /* 24px */;
-          bottom: 2rem /* 32px */;
-          left: 50%;
-          width: 3px;
-          background-color: #acb9c5;
-        }
-        .relative::after {
-          content: "";
-          position: absolute;
-          top: 4rem /* 64px */;
-          left: 2rem /* 32px */;
-          right: 2rem /* 32px */;
-          height: 1px;
-          background-color: #acb9c5;
-        }
-      `}</style>
+      <div className="relative flex h-[650px] w-[2px] translate-y-[-5px] items-center justify-center rounded bg-[#acb9c5]" />
+      <div className="flex w-auto flex-col items-center">
+        <Label
+          className={cn("relative text-3xl font-normal text-zinc-800", tillana.className)}
+          htmlFor="nosotros"
+        >
+          Nosotros
+        </Label>
+        <div className="flex h-[500px] w-[150px] flex-col items-center">
+          {renderCuadrado(puntosNos)}
+        </div>
+        <div className="mt-8 flex items-center space-x-8">
+          <Button
+            className="rounded-full bg-[#994040] text-[#f0db66] hover:bg-[#7c3434]"
+            id="restarNos"
+            onClick={() => handleRestar("nos")}
+          >
+            -
+          </Button>
+          <Label className={cn("text-lg text-zinc-800", tillana.className)} htmlFor="puntosNos">
+            {puntosNos}
+          </Label>
+          <Button
+            className="rounded-full bg-[#446e41] text-[#f0db66] hover:bg-[#385c36]"
+            id="sumarNos"
+            onClick={() => handleSumar("nos")}
+          >
+            +
+          </Button>
+        </div>
+      </div>
     </section>
   );
 }
