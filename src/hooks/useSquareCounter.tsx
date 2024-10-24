@@ -3,7 +3,8 @@ import React from "react";
 
 const puntosPorCubo = 5; // Cada cubo puede tener hasta 5 puntos
 
-/* setLados y setCubos ??*/
+/* setLados y setCubos ??
+separar cantidad de lados y cubos por un lado y su renderización por otro */
 
 export const useSquareCounter = () => {
   const renderCuadrado = (puntos: number) => {
